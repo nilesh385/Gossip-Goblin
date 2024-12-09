@@ -46,16 +46,16 @@ npm start
 
 # .env file variables
 
-VITE_API_URL= your-backend-url
+- VITE_API_URL= your-backend-url
 
-VITE_CLOUDINARY_CLOUD_NAME= your-cloud-name
+- VITE_CLOUDINARY_CLOUD_NAME= your-cloud-name
 
-VITE_CLOUDINARY_API_KEY= your-api-key
+- VITE_CLOUDINARY_API_KEY= your-api-key
 
-VITE_CLOUDINARY_API_SECRET= your-api-secret
+- VITE_CLOUDINARY_API_SECRET= your-api-secret
 
-JWT_SECRET= jwt-secret
+- JWT_SECRET= jwt-secret
 
-MONGODB_URI=your-mongodb-uri
+- MONGODB_URI=your-mongodb-uri
 
-FRONTEND_URL="http://localhost:5173"
+- FRONTEND_URL="http://localhost:5173"
