@@ -29,6 +29,13 @@ export const auth = {
     });
     return response.data;
   },
+  forgotPassword: async (data: {
+    emailOrUsername: string;
+    newPassword: string;
+  }) => {
+    const response = await api.post("/api/auth/forgot-password", data);
+    return response.data;
+  },
 };
 
 export const messages = {
@@ -80,6 +87,12 @@ export const users = {
     const response = await api.post(`/api/users/friend-request/${userId}`);
     return response.data;
   },
+  cancelFriendRequest: async (userId: string) => {
+    const response = await api.delete(
+      `/api/users/friend-request/${userId}/cancel`
+    );
+    return response.data;
+  },
   acceptFriendRequest: async (userId: string) => {
     const response = await api.post(
       `/api/users/friend-request/${userId}/accept`
@@ -100,12 +113,20 @@ export const users = {
     const response = await api.post(`/api/users/block/${userId}`);
     return response.data;
   },
+  getSentFriendRequests: async () => {
+    const response = await api.get(`/api/users/get-sent-friend-requests`);
+    return response.data;
+  },
   getPendingFriendRequests: async () => {
     const response = await api.get(`/api/users/pending-friend-requests`);
     return response.data;
   },
   getAllFriends: async () => {
     const response = await api.get(`/api/users/all-friends`);
+    return response.data;
+  },
+  getFriendProfile: async (friendId: string) => {
+    const response = await api.get(`/api/users/friend-profile/${friendId}`);
     return response.data;
   },
 };

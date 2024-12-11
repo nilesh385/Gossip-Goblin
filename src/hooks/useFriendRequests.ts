@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { users } from "@/lib/api";
 import { FriendRequest } from "@/types";
@@ -10,7 +10,10 @@ export const useFriendRequests = () => {
   const queryClient = useQueryClient();
   const [processingId, setProcessingId] = useState<string | null>(null);
 
-  const { data: requests = [], isLoading } = useQuery({
+  const {
+    data: requests = [],
+    isLoading,
+  }: { data: FriendRequest[] | undefined; isLoading: boolean } = useQuery({
     queryKey: ["friendRequests"],
     queryFn: async () => {
       try {

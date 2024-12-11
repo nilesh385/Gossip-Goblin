@@ -33,12 +33,10 @@ export const ConversationItem = ({
 
   const { user } = useAuthStore();
   const isActive = activeConversation?._id === conversation._id;
-  const isOnline = conversation.participants.some((participant) =>
-    onlineUsers.includes(participant._id)
-  );
   const otherParticipant = conversation.participants.find(
     (participant) => participant._id !== user?._id
   );
+  const isOnline = onlineUsers.includes(otherParticipant?._id!);
 
   return (
     <Button
@@ -81,7 +79,7 @@ export const ConversationItem = ({
           ) : (
             <p className="text-sm text-muted-foreground">No messages yet</p>
           )}
-          {!conversation.isGroup && isOnline && (
+          {!conversation && isOnline && (
             <div className="w-2 h-2 rounded-full bg-green-500" />
           )}
         </div>

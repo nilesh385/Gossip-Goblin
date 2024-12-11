@@ -23,7 +23,6 @@ export const signup = async (req, res) => {
             : "Username already taken",
       });
     }
-    const hashedPass = await bcrypt.hash(password, 12);
     let profilePicUrl = "";
 
     // Handle profile picture upload
@@ -46,7 +45,7 @@ export const signup = async (req, res) => {
       email,
       username,
       fullName,
-      password: hashedPass,
+      password,
       profilePic: profilePicUrl,
       bio,
     });
@@ -79,8 +78,7 @@ export const login = async (req, res) => {
       return res.status(401).json({ message: "User not found" });
     }
 
-    const comparedPass = await bcrypt.compare(password, user.password);
-    if (password !== comparedPass) {
+    if (password !== user.password) {
       return res.status(401).json({ message: "Invalid password" });
     }
 
@@ -98,5 +96,23 @@ export const login = async (req, res) => {
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ message: "Server error during login" });
+  }
+};
+
+export const forgotPass = async (req, res) => {
+  try {
+    const { emailOrUsername, newPassword } = req.body;
+    const user = await User.findOne({
+      $or: [{ email: emailOrUsername }, { username: emailOrUsername }],
+    });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.password = newPassword;
+    await user.save();
+    res.json({ message: "Password reset successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };

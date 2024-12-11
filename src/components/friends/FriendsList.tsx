@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { ScrollArea } from "../ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import useChatStore from "@/store/chatStore";
 import useAuthStore from "@/store/authStore";
 import { users } from "@/lib/api";
 import { Button } from "../ui/button";
 import { SearchDialog } from "../search/SearchDialog";
+import { FriendRequestSkeleton } from "./FriendRequestSkeleton";
+import { User } from "@/types";
+import { toast } from "sonner";
 
 interface Friend {
   _id: string;
@@ -20,9 +21,7 @@ export const FriendsList = () => {
   const [isLoading, setIsLoading] = useState(true);
   const token = useAuthStore((state) => state.token);
   const user = useAuthStore((state) => state.user);
-  const setActiveConversation = useChatStore(
-    (state) => state.setActiveConversation
-  );
+  const [friendProfile, setFriendProfile] = useState<User>({} as User);
 
   useEffect(() => {
     const fetchFriends = async () => {
@@ -39,27 +38,22 @@ export const FriendsList = () => {
     fetchFriends();
   }, [token, user?._id]);
 
-  const startChat = async (friendId: string) => {
+  const getFriendProfile = async (friendId: string) => {
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/conversations",
-        { participantId: friendId },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      setActiveConversation(response.data._id);
+      const response = await users.getFriendProfile(friendId);
+      setFriendProfile(response);
     } catch (error) {
+      toast.error("Failed to fetch friend profile");
       console.error("Failed to start conversation:", error);
     }
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <FriendRequestSkeleton />;
   }
 
   return (
-    <ScrollArea className="h-full p-4 w-full md:w-[320px] border-r-2">
+    <ScrollArea className="h-full p-4 w-1/2 md:w-[320px] border-r-2">
       <div className="space-y-4 flex flex-col h-full">
         <div className="flex items-center w-full justify-between">
           <h2 className="text-2xl font-bold flex items-center justify-between">
@@ -77,7 +71,7 @@ export const FriendsList = () => {
                     key={friend._id}
                     variant="ghost"
                     className="w-full flex items-center gap-4 justify-start h-auto p-4"
-                    onClick={() => startChat(friend._id)}
+                    onClick={() => getFriendProfile(friend._id)}
                   >
                     <Avatar>
                       <AvatarImage
@@ -98,7 +92,7 @@ export const FriendsList = () => {
                 )
             )}
           {friends && friends.length === 0 && (
-            <div className="w-full flex items-center gap-4 justify-start h-auto p-4 text-muted-foreground text-xl">
+            <div className="w-full flex items-center gap-4 justify-start h-auto p-4 text-muted-foreground text-md">
               Add some friends by searching using email or username.
             </div>
           )}

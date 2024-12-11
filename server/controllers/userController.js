@@ -138,6 +138,28 @@ export const sendFriendRequest = async (req, res) => {
   }
 };
 
+export const cancelFriendRequest = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const sender = await User.findById(req.user._id);
+    const receiver = await User.findById(userId);
+
+    if (!receiver) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    sender.sentFriendRequests.pull(userId);
+    receiver.pendingFriendRequests.pull(req.user._id);
+
+    await sender.save();
+    await receiver.save();
+
+    res.json({ message: "Friend request canceled" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export const acceptFriendRequest = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -185,12 +207,20 @@ export const rejectFriendRequest = async (req, res) => {
   }
 };
 
+export const getSentFriendRequests = async (req, res) => {
+  try {
+    const sentFriendRequests = await User.findById(req.user._id).populate(
+      "sentFriendRequests",
+      "username fullName profilePic"
+    );
+    return res.json(sentFriendRequests.sentFriendRequests);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export const getAllFriends = async (req, res) => {
   try {
-    // const friends = await User.findById(req.user._id).populate(
-    //   "friends",
-    //   "username fullName profilePic"
-    // );
     const user = await User.findById(req.user._id);
     const friends = await User.find({ _id: { $in: user.friends } }).select(
       "username fullName profilePic"
@@ -208,6 +238,19 @@ export const getFriendRequests = async (req, res) => {
       "username fullName profilePic"
     );
     return res.json(friendRequests);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getFriendProfile = async (req, res) => {
+  try {
+    const { friendId } = req.params;
+    const friend = await User.findById(friendId);
+    if (!friend) return res.status(404).json({ message: "User not found" });
+
+    delete friend.password;
+    return res.json(friend);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

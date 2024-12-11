@@ -95,6 +95,9 @@ export class SocketService {
   emitMessageRead(messageId: string, conversationId: string) {
     this.socket?.emit("messageRead", { messageId, conversationId });
   }
+  emitNewMessage(message: Message) {
+    this.socket?.emit("newMessage", message);
+  }
 
   getSocket = () => this.socket;
   disconnect() {

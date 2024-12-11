@@ -1,4 +1,4 @@
-import { User, MoreVertical } from "lucide-react";
+import { User, MoreVertical, UserCircle2Icon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,6 +9,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import useChatStore from "@/store/chatStore";
 import useAuthStore from "@/store/authStore";
+import ViewFriendProfile from "../friends/ViewFriendProfile";
+import ToolTip_ from "../ToolTip_";
 
 interface ChatHeaderProps {
   conversation: {
@@ -21,30 +23,22 @@ interface ChatHeaderProps {
     }[];
     isGroup?: boolean;
   };
-  onViewProfile?: () => void;
-  onLeaveGroup?: () => void;
 }
 
-export const ChatHeader = ({
-  conversation,
-  onViewProfile,
-  onLeaveGroup,
-}: ChatHeaderProps) => {
+export const ChatHeader = ({ conversation }: ChatHeaderProps) => {
   const onlineUsers = useChatStore((state) => state.onlineUsers);
   const { user } = useAuthStore();
 
-  const isOnline = conversation?.participants?.some((participant) =>
-    onlineUsers.includes(participant._id)
-  );
   const otherUser = conversation?.participants?.find(
     (participant) => participant._id !== user?._id
   );
+  const isOnline = onlineUsers.includes(otherUser?._id!);
   return (
     <div className="border-b p-4 flex items-center justify-between bg-card">
       <div className="flex items-center gap-3">
         <Avatar>
           <AvatarImage
-            src={conversation.isGroup ? undefined : otherUser?.profilePic}
+            src={otherUser?.profilePic}
             alt={conversation?.name || otherUser?.username}
           />
           <AvatarFallback>
@@ -59,7 +53,7 @@ export const ChatHeader = ({
           <h2 className="font-semibold">
             {conversation?.name || otherUser?.username}
           </h2>
-          {!conversation.isGroup && (
+          {conversation && (
             <p className="text-sm text-muted-foreground">
               {isOnline ? "Online" : "Offline"}
             </p>
@@ -67,29 +61,13 @@ export const ChatHeader = ({
         </div>
       </div>
 
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon">
-            <MoreVertical className="h-5 w-5" />
-            <span className="sr-only">More options</span>
+      <ToolTip_ content={"View Profile"}>
+        <ViewFriendProfile friendId={otherUser?._id!}>
+          <Button size={"icon"}>
+            <UserCircle2Icon className="size-full" />
           </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          {onViewProfile && (
-            <DropdownMenuItem onClick={onViewProfile}>
-              View Profile
-            </DropdownMenuItem>
-          )}
-          {conversation.isGroup && onLeaveGroup && (
-            <DropdownMenuItem
-              onClick={onLeaveGroup}
-              className="text-destructive"
-            >
-              Leave Group
-            </DropdownMenuItem>
-          )}
-        </DropdownMenuContent>
-      </DropdownMenu>
+        </ViewFriendProfile>
+      </ToolTip_>
     </div>
   );
 };

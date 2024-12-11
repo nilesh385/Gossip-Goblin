@@ -35,23 +35,11 @@ export const ChatWindow = () => {
     }
   }, [activeConversation, setMessages]);
 
-  const handleViewProfile = () => {
-    // Implement profile viewing logic
-  };
-
-  const handleLeaveGroup = () => {
-    // Implement group leaving logic
-  };
-
   return (
     <div className="h-full flex flex-col bg-background overflow-hidden">
       {activeConversation ? (
         <>
-          <ChatHeader
-            conversation={activeConversation}
-            onViewProfile={handleViewProfile}
-            onLeaveGroup={handleLeaveGroup}
-          />
+          <ChatHeader conversation={activeConversation} />
           <MessageList />
           <MessageInput />
         </>

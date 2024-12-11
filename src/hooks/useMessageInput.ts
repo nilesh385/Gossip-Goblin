@@ -37,6 +37,7 @@ export const useMessageInput = () => {
         conversationId: activeConversation._id,
         content: data.message,
       });
+      // console.log(response);
       addMessage(response);
       if (inputRef.current) {
         inputRef.current.value = "";

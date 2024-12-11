@@ -12,7 +12,7 @@ This project is a real-time chat application built with React, TypeScript, and N
 
 ## Technologies Used
 
-- **Frontend:** React, TypeScript
+- **Frontend:** React, TypeScript , Shadcn-ui
 - **Backend:** Node.js, Express.js, Socket.IO
 - **Database:** MOngoDB
 

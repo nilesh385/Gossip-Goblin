@@ -33,9 +33,6 @@ export const MessageBubble = ({
           isOwnMessage ? "bg-primary text-primary-foreground" : "bg-secondary"
         }`}
       >
-        {!isOwnMessage && showAvatar && (
-          <p className="text-xs font-medium mb-1">{sender.username}</p>
-        )}
         <p className="text-sm whitespace-pre-wrap break-words">{content}</p>
         <div className="flex items-center justify-end gap-1 mt-1">
           <span className="text-xs opacity-70">{formatTime(createdAt)}</span>

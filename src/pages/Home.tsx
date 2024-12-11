@@ -3,7 +3,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { ChatLayout } from "@/components/chat/ChatLayout";
 import { UserProfile } from "@/components/UserProfile";
 import { useSocket } from "@/hooks/useSocket";
-import { FriendsList } from "@/components/friends/FriendsList";
+import FriendsTab from "@/components/friends/FriendsTab";
 
 type Tab = "home" | "friends" | "profile";
 
@@ -16,7 +16,7 @@ const Home = () => {
       case "home":
         return <ChatLayout />;
       case "friends":
-        return <FriendsList />;
+        return <FriendsTab />;
       case "profile":
         return <UserProfile />;
       default:
