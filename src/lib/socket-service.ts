@@ -78,7 +78,6 @@ export class SocketService {
         .setOnlineUsers(onlineUsers.filter((id) => id !== userId));
     });
   }
-
   // Emit events
   emitFriendRequestResponse(requestId: string, action: "accept" | "reject") {
     this.socket?.emit("friendRequestResponse", { requestId, action });
