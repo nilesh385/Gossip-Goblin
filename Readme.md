@@ -20,7 +20,7 @@ GoblinGossip is a real-time chat application built with a combination of modern 
 - **React:** A JavaScript library for building user interfaces.
 - **Vite:** A fast build tool that significantly improves development speed.
 - **Tailwind CSS:** A utility-first CSS framework for rapid UI development.
-- **Redux Toolkit:** A state management library for handling application state.
+- **Zustand:** A state management library for handling application state.
 
 **Server (Backend):**
 
